@@ -18,11 +18,6 @@ import java.io.IOException;
 public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public LoginController() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
 		if (session != null && session.getAttribute("account") != null) {
@@ -73,6 +68,12 @@ public class LoginController extends HttpServlet {
 			// Tạo session
 			HttpSession session = req.getSession(true);
 			session.setAttribute("account", user);
+			session.setAttribute("username", user.getUserName());
+			//Gửi thông tin sang profile
+			session.setAttribute("email", user.getEmail());
+			session.setAttribute("fullname", user.getFullName());
+			session.setAttribute("phone", user.getPhone());
+			session.setAttribute("images", user.getImages());
 			if (isRememberMe) {
 				saveRemeberMe(resp, username);
 			}

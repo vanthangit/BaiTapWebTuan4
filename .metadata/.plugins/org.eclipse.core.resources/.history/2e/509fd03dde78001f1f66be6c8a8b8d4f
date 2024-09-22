@@ -1,0 +1,95 @@
+package vn.iotstar.controllers;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import vn.iotstar.dao.impl.UserDaoImpl;
+import vn.iotstar.models.UserModel;
+
+@WebServlet(urlPatterns = "/profile")
+public class ProfileController extends HttpServlet{
+
+	private static final long serialVersionUID = 1L;
+	private UserDaoImpl userDao;
+
+    public void init() {
+        userDao = new UserDaoImpl();
+    }
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		  UserModel user = (UserModel) req.getSession().getAttribute("user");
+	        if (user != null) {
+	            user = userDao.findById(user.getId());
+	            req.setAttribute("user", user);
+	        }
+	        req.getRequestDispatcher("/views/profile.jsp").forward(req, resp);
+	}
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		UserModel user = (UserModel) req.getSession().getAttribute("user");
+        if (user != null) {
+            // Fetch the latest user data from the database
+            user = userService.findById(user.getId());
+            req.setAttribute("user", user);
+        }
+        req.getRequestDispatcher("/views/profile.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            UserModel user = (UserModel) req.getSession().getAttribute("user");
+            if (user == null) {
+                resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
+
+            String fullname = req.getParameter("fullname");
+            String email = req.getParameter("email");
+            String phone = req.getParameter("phone");
+
+            // Handle file upload
+            Part filePart = req.getPart("images");
+            String fileName = null;
+            if (filePart != null && filePart.getSize() > 0) {
+                fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                String uploadPath = getServletContext().getRealPath("") + "uploads";
+                Files.createDirectories(Paths.get(uploadPath));
+                String filePath = uploadPath + "/" + fileName;
+                filePart.write(filePath);
+            }
+
+            // Update user information
+            user.setFullName(fullname);
+            user.setEmail(email);
+            user.setPhone(phone);
+            if (fileName != null) {
+                user.setImages("uploads/" + fileName);
+            }
+
+            // Update the user in the database
+            int result = userDao.editProfile(user);
+            if (result > 0) {
+                // Update the session with the new user data
+                req.getSession().setAttribute("user", user);
+                req.setAttribute("message", "Profile updated successfully");
+            } else {
+                req.setAttribute("error", "Failed to update profile");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("error", "An error occurred while updating the profile");
+        }
+        resp.sendRedirect(req.getContextPath() + "/profile");
+    }
+}

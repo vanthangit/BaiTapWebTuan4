@@ -1,0 +1,8 @@
+package vn.iotstar.controllers;
+
+import jakarta.servlet.annotation.WebServlet;
+
+@WebServlet(urlPatterns = "/profile")
+public class ProfileController {
+
+}
