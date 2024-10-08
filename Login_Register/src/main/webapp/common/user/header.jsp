@@ -34,12 +34,12 @@
                     <ul class="list-unstyled list-inline pull-right">
                         <li><a href="shop-wishlist.html">My Wishlist</a></li>
                         <li><a href="${pageContext.request.contextPath}/profile">Profile</a></li>
-                        <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
 						<c:choose>
 							<c:when test="${empty sessionScope.username}">
 								<li><a href="${pageContext.request.contextPath}/login">Login</a></li>
 							</c:when>
 							<c:otherwise>
+								<li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
 								<li>${sessionScope.username}</li>
 							</c:otherwise>
 						</c:choose>

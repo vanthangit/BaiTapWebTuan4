@@ -38,13 +38,13 @@
 					<c:otherwise>
 						<section>
 						<div class="form-group">
-                               <label for="images">Profile Image</label>
-                               <input type="file" name="images" id="images" class="form-control">
-                         <c:if test="${not empty requestScope.user.images}">
+						<c:if test="${not empty requestScope.user.images}">
 							<div style="display: flex; justify-content: center;">
-								<img src="${pageContext.request.contextPath}/${requestScope.user.images}"alt="Profile Image" style="max-width: 200px; margin-top: 10px;">
+								<img src="${pageContext.request.contextPath}/${requestScope.user.images}" alt="Profile Image" style="max-width: 200px; margin-top: 10px;">
 							</div>
 						</c:if>
+                            <label for="images">Profile Image</label>
+                            <input type="file" name="images" id="images" class="form-control">
                                
                          </div>
 						</section>

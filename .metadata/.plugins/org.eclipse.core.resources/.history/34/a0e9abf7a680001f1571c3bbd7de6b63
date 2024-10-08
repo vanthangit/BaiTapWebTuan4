@@ -1,0 +1,9 @@
+package vn.iotstar.controllers.admin;
+
+import jakarta.servlet.http.HttpServlet;
+
+public class HomeController extends HttpServlet{
+
+	private static final long serialVersionUID = 1L;
+
+}

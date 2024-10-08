@@ -5,5 +5,4 @@ INDEX VERSION 1.4+D:\LTWeb\BaiTap\.metadata\.plugins\org.eclipse.wst.jsdt.core\i
 3268338483.index
 2380175872.index
 2286636531.index
-2024588387.index
 1121189906.index
